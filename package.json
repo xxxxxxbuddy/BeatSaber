@@ -1,0 +1,29 @@
+{
+  "name": "beatsaber",
+  "version": "1.0.0",
+  "description": "A music rhythm VR game.",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxxxxxbuddy/BeatSaber.git"
+  },
+  "keywords": [
+    "music",
+    "rhythm",
+    "VR",
+    "game"
+  ],
+  "author": "Rawlence",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/xxxxxxbuddy/BeatSaber/issues"
+  },
+  "homepage": "https://github.com/xxxxxxbuddy/BeatSaber#readme",
+  "devDependencies": {
+    "electron": "^5.0.6"
+  }
+}
