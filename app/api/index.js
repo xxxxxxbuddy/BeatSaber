@@ -62,3 +62,14 @@ export function GetPopularity() {
         method: 'GET'
     })
 }
+
+export function GetPlayerRecord(playerID, musicID) {
+    return fetch({
+        url: '/Statistics.svc/GetPlayerRecord',
+        method: 'GET',
+        params: {
+            PlayerID: playerID,
+            MusicID: musicID
+        }
+    })
+}
