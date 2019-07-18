@@ -26,7 +26,8 @@ export default class Music extends React.Component {
     super(props);
     this.state = {
       i: 1,
-      music: this.props.match.params[0],
+      music: this.props.match.params[0].slice(0, this.props.match.params[0].indexOf('&')),
+      musicName: this.props.match.params[0].slice(this.props.match.params[0].indexOf('&') + 1),
       list: [],
       modalShow: false
     }
@@ -106,7 +107,7 @@ export default class Music extends React.Component {
   render () {
     return (
       <div className={styles.tableContainer}>
-        <h2 className={styles.music}>歌曲名：{music}</h2>
+        <h3 className={styles.music}>歌曲名：{this.state.musicName}</h3>
 
         <Table striped bordered hover>
           <thead>

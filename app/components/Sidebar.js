@@ -38,7 +38,7 @@ export default class Sidebar extends React.Component {
         <NavDropdown title="曲目列表" id="nav-dropdown" className={styles.offsetLeft}>
           {this.state.musicInfo.map(music => {
             return(
-              <NavDropdown.Item href={"#/admin/music/" + music.MusicID} eventKey={music.MusicID} key={music.MusicID}>{music.MusicName}</NavDropdown.Item>
+              <NavDropdown.Item href={"#/admin/music/" + music.MusicID + "&" + music.MusicName} eventKey={music.MusicID} key={music.MusicID}>{music.MusicName}</NavDropdown.Item>
             )
           })}
         </NavDropdown>
