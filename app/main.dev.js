@@ -76,8 +76,8 @@ app.on('ready', async () => {
     autoHideMenuBar: true,
     icon: '../resources/icons/favicon/icon.iconset',
     darkTheme: true,
-    width: 1024,
-    height: 728
+    width: 1100,
+    height: 768
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

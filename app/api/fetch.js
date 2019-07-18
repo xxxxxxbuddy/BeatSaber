@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 const fetch = axios.create({
-    baseURL: "http://localhost:3333", // 这里是本地express启动的服务地址
+    baseURL: "http://39.98.221.147:8014", // 这里是本地express启动的服务地址
     timeout: 5000 // request timeout
 })
 fetch.interceptors.request.use(config => {
