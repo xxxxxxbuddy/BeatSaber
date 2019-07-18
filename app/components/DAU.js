@@ -2,80 +2,69 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import styles from './DAU.css'
 import Chart from 'chart.js';
+const storage = require('electron-json-storage');
 import { GetLoginCount } from '../api/index';
+import { dialog } from 'electron';
 
 export default class DAU extends React.Component {
 
   constructor(props) {
     super(props);
-    this.labels = [];
-    this.data = [];
-    this.errMsg = '';
-    this.isChartRendered = false;
   }
 
-  getData() {
-    let res = [];
-    GetLoginCount().then(
-      res => {
-        if (res.data.code === 1) {
-          res.data.result.forEach(item => {
-            this.labels.push(item.TheDate.slice(0, 10));
-            this.data.push(item.LoginCount);
-          })
-        } else {
-         //  this.ErrModal(res.data.errMsg);
-        }
+componentDidMount() {
+  this.RenderChart();
+}
+
+ RenderChart() {
+  storage.get('chartData', (err, data) => {
+    if(err) {
+      dialog.showErrorBox("错误", err.message);
+      this.props.history.go(-1);
+      return;
+    }
+    this.setState({
+      isChartRendered: false,
+      data: data.data,
+      labels: data.labels
+    })
+  })
+    var ctx = 'DAU';
+    setTimeout(() => {
+      try {
+        var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: this.state.labels,
+              datasets: [{
+                  label: 'DAU',
+                  data: this.state.data,
+                  borderWidth: 2,
+                  borderColor: '#026FF3',
+                  backgroundColor: 'rgba(255, 255, 255, 0)',
+                  fill: false,
+                  lineTension: 0,
+                  pointBackgroundColor: '#026FF3'
+              }]
+    
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+        });
+      } catch (err) {
+        console.log('ERROR:' + err);
       }
-    )
+    }, 500);
   }
- 
-  componentWillMount() {
-    this.getData();
-  }
-
-  componentWillUpdate() {
-    this.getData();
-  }
-
 
   render () {
-    if(!this.isChartRendered) {
-      setTimeout(() => {
-        var ctx = 'DAU';
-        try {
-          var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: this.labels,
-                datasets: [{
-                    label: 'DAU',
-                    data: this.data,
-                    borderWidth: 2,
-                    borderColor: '#026FF3',
-                    backgroundColor: 'rgba(255, 255, 255, 0)',
-                    fill: false,
-                    lineTension: 0,
-                    pointBackgroundColor: '#026FF3'
-                }]
-    
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-          });
-        } catch (err) {
-          console.log('ERROR:' + err);
-        }
-        this.isChartRendered = true;
-      }, 500);    
-    }
 
     return (
       <div>
@@ -110,3 +99,5 @@ export default class DAU extends React.Component {
 //     </Modal>
 //   )
 // }
+
+

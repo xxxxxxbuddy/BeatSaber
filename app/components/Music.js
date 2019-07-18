@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button, ProgressBar } from 'react-bootstrap';
 import styles from './Music.css';
+import { GetRankByMusicID, GetPopularity } from '../api';
 
 let music;
 
@@ -23,34 +24,35 @@ export default class Music extends React.Component {
 
   constructor(props) {
     super(props);
-    music = this.props.match.params[0];
+    this.state = {
+      i: 1,
+      music: this.props.match.params[0],
+      list: []
+    }
   }
 
   componentDidMount() {
+    this.getList(this.state.music);
     window.addEventListener('hashchange', () => {
-      music = this.props.match.params[0];
-      list = this.getList(music);
+      this.getList(this.props.match.params[0]);
+      this.setState({
+        i: 0
+      })
     })
   }
 
   getList(musicID) {
-
-    return [
-      {
-        Rank: 1,
-        ID: "0001",
-        Account: "TestAccount1",
-        Progress: 60,
-        Score: 123455
-      },
-      {
-        Rank: 1,
-        ID: "0002",
-        Account: "TestAccount1",
-        Progress: 60,
-        Score: 123455
-      },
-    ]
+    GetRankByMusicID(parseInt(musicID)).then(res => {
+      if(res.data.code === 1){
+        this.setState({
+          list: res.data.result
+        })
+      }else {
+        console.log(res.data.errMsg);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
   };
 
   render () {
@@ -63,23 +65,21 @@ export default class Music extends React.Component {
             <tr>
               <th>Rank</th>
               <th>ID</th>
-              <th>Account</th>
               <th>Progress</th>
-              <th>Score</th>
+              <th>UpdateTime</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {list.map(item => {
+            {this.state.list.map(item => {
               return (
-                <tr key={item.ID}>
-                  <td>{item.Rank}</td>
-                  <td>{item.ID}</td>
-                  <td>{item.Account}</td>
+                <tr key={item.PlayerID}>
+                  <td>{this.state.list.indexOf(item) + 1}</td>
+                  <td>{item.PlayerID}</td>
                   <td>
-                    <ProgressBar now={now} label={`${now}%`} animated style={style.progress} />
+                    <ProgressBar now={item.Progress} label={`${item.Progress}%`} animated style={style.progress} />
                   </td>
-                  <td>{item.Score}</td>
+                  <td>{new Date(item.RecordTime).toLocaleString()}</td>
                   <td>
                     <Button variant="secondary" style={style.changeBtn}>修改</Button>
                     <Button variant="danger" style={style.delBtn}>删除</Button>

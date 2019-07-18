@@ -1,10 +1,27 @@
 import React from 'react';
 import { Nav, NavDropdown } from 'react-bootstrap';
 import styles from './Sidebar.css';
+import { GetPopularity } from '../api';
 const Logo = require('../../resources/icons/BSLogo.png');
 
 
 export default class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      musicInfo: []
+    }
+  }
+
+  componentDidMount() {
+    GetPopularity().then(res => {
+      if(res.data.code === 1) {
+        this.setState({musicInfo: res.data.result})
+      }
+    })
+  }
+
+
   render () {
     return (
       <Nav defaultActiveKey="/" className={styles.sidebar}>
@@ -19,8 +36,11 @@ export default class Sidebar extends React.Component {
         </Nav.Link>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.fixsvg}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
         <NavDropdown title="曲目列表" id="nav-dropdown" className={styles.offsetLeft}>
-          <NavDropdown.Item href="#/admin/music/1" eventKey="music-1">Faded</NavDropdown.Item>
-          <NavDropdown.Item href="#/admin/music/2" eventKey="music-2">Whatever it takes</NavDropdown.Item>
+          {this.state.musicInfo.map(music => {
+            return(
+              <NavDropdown.Item href={"#/admin/music/" + music.MusicID} eventKey={music.MusicID} key={music.MusicID}>{music.MusicName}</NavDropdown.Item>
+            )
+          })}
         </NavDropdown>
         {/* <Nav.Link eventKey="music">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className={styles.feather}><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>

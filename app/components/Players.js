@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button } from 'react-bootstrap';
-import styles from './Players.css'
+import { GetPlayers } from '../api';
+import styles from './Players.css';
 
 let style = {
   changeBtn: {
@@ -15,32 +16,76 @@ let style = {
 let players = [];
 export default class Players extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      playerLists: [
+        {
+          ID: '1',
+          PlayerName: '王若昕',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '2',
+          PlayerName: '王翀',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '3',
+          PlayerName: '张雷',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '4',
+          PlayerName: '司马琪',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '5',
+          PlayerName: '庄浩城',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '6',
+          PlayerName: '郭晶',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '7',
+          PlayerName: '李秋媛',
+          PSW: '123',
+          PlayerState: '0'
+        },
+        {
+          ID: '8',
+          PlayerName: 'admin',
+          PSW: 'admin',
+          PlayerState: '0'
+        }
+      ]
+    }
+  }
+
   componentDidMount() {
-    players = this.getPlayerList();
+    this.getPlayerList();
   }
 
   getPlayerList() {
-
-    return [
-      {
-        ID: '0001',
-        Account: 'TestAccount1',
-        Password: 'TestAccount1',
-        Status: 'offline'
-      },
-      {
-        ID: '0002',
-        Account: 'TestAccount1',
-        Password: 'TestAccount1',
-        Status: 'offline'
-      },
-      {
-        ID: '0003',
-        Account: 'TestAccount1',
-        Password: 'TestAccount1',
-        Status: 'offline'
-      }
-    ]
+    GetPlayers().then(res => {
+      let temp = res.data.result.map(item => {
+        item.PlayerState = item.PlayerState == 0 ? '离线' : '在线';
+        return item;
+      })
+      this.setState({
+        playerLists: temp
+      })
+    })
   }
 
   render () {
@@ -57,13 +102,13 @@ export default class Players extends React.Component {
             </tr>
           </thead>
           <tbody>
-          {players.map(player => {
+          {this.state.playerLists.map(player => {
               return(
-                <tr key={player.ID}>
-                  <td>{player.ID}</td>
-                  <td>{player.Account}</td>
-                  <td>{player.Password}</td>
-                  <td>{player.Status}</td>
+                <tr key={player.PlayerID}>
+                  <td>{player.PlayerID}</td>
+                  <td>{player.PlayerName}</td>
+                  <td>{player.PSW}</td>
+                  <td>{player.PlayerState}</td>
                   <td>
                     <Button variant="secondary" style={style.changeBtn}>修改</Button>
                     <Button variant="danger" style={style.delBtn}>删除</Button>
